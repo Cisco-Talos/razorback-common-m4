@@ -36,10 +36,10 @@ AS_IF([test "x$OPENSSL_HEADER" = "xno"],
           [AC_MSG_ERROR("openssl header file not found")]
      )
 
-#AC_CHECK_HEADERS([magic.h], [], [MAGIC_HEADER="no"])
-#AS_IF([test "x$MAGIC_HEADER" = "xno"],
-#          [AC_MSG_ERROR("magic header file not found")]
-#     )
+AC_CHECK_HEADERS([magic.h], [], [MAGIC_HEADER="no"])
+AS_IF([test "x$MAGIC_HEADER" = "xno"],
+          [AC_MSG_ERROR("magic header file not found")]
+     )
 
 #AC_CHECK_HEADERS([pcre.h], [], [PCRE_HEADER="no"])
 #AS_IF([test "x$PCRE_HEADER" = "xno"],
