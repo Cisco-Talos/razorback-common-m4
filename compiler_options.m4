@@ -26,7 +26,7 @@ if test "$GCC" = yes ; then
         LDFLAGS="$LDFLAGS -XCClinker -pg"
     fi
 
-    CFLAGS="$CFLAGS -std=c99 -fno-strict-aliasing"
+    CFLAGS="$CFLAGS -std=c11 -fno-strict-aliasing"
     CPPFLAGS="$CPPFLAGS -fno-strict-aliasing"
     CWARNINGS="$CWARNINGS -Wall -Werror -Wwrite-strings -Wformat -fdiagnostics-show-option -Wextra -Wformat-security -Wsign-compare -Wcast-align -Wno-unused-parameter"
     if test "x$NOT_PEDANTIC" = "x"; then
