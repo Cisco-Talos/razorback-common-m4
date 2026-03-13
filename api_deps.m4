@@ -21,7 +21,7 @@ m4_include(common_m4/set_dirs.m4)
 AC_CHECK_LIB([rt], [timer_create])
 AC_CHECK_LIB([m], [floor])
 AC_CHECK_LIB([pthread], [pthread_create])
-AC_CHECK_LIB([crypto], [EVP_DigestInit])
+AC_CHECK_LIB([crypto], [EVP_MD_fetch])
 AC_CHECK_LIB([ssl], [SSL_write])
 AC_CHECK_LIB([magic], [magic_open])
 AC_CHECK_LIB([dl], [dlopen])
@@ -47,9 +47,27 @@ AS_IF([test "x$UUID_HEADER" = "xno"],
           [AC_MSG_ERROR("uuid header file not found")]
      )
 
-AC_CHECK_HEADERS([openssl/evp.h], [], [OPENSSL_HEADER="no"])
+AC_CHECK_HEADERS([openssl/evp.h openssl/opensslv.h], [], [OPENSSL_HEADER="no"])
 AS_IF([test "x$OPENSSL_HEADER" = "xno"],
           [AC_MSG_ERROR("openssl header file not found")]
+     )
+
+AC_CACHE_CHECK([for OpenSSL >= 3.0], [rb_cv_openssl_v3], [
+    AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
+#include <openssl/opensslv.h>
+#if defined(OPENSSL_VERSION_MAJOR)
+# if OPENSSL_VERSION_MAJOR < 3
+#  error OpenSSL 3.0 or newer is required
+# endif
+#elif OPENSSL_VERSION_NUMBER < 0x30000000L
+# error OpenSSL 3.0 or newer is required
+#endif
+    ]], [[]])],
+    [rb_cv_openssl_v3=yes],
+    [rb_cv_openssl_v3=no])
+])
+AS_IF([test "x$rb_cv_openssl_v3" != "xyes"],
+          [AC_MSG_ERROR("OpenSSL 3.0 or newer is required")]
      )
 
 AC_CHECK_HEADERS([magic.h], [], [MAGIC_HEADER="no"])
@@ -84,4 +102,3 @@ PKG_CHECK_MODULES([SSH], [libssh >= 0.9])
 
 CFLAGS="$SSH_CFLAGS $CFLAGS"
 LIBS="$SSH_LIBS $LIBS"
-
